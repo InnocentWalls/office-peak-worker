@@ -162,4 +162,3 @@ wrangler dev --test scheduled "0 * * * MON-FRI"
 ## 📝 ライセンス
 
 MIT License  
-© 2025 Your Company Name
