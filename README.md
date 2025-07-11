@@ -113,6 +113,24 @@ Settings → Triggers で Cron、Variables で Secrets、KV Namespaces でバイ
 
 ※ OAuth と Basic 認証は **どちらか一方だけ** 設定してください。
 
+### 📋 Jamf Pro OAuth2 スコープについて
+
+OAuth2 認証を使用する場合、以下のスコープが必要です：
+
+```bash
+# 必要なスコープを設定
+wrangler secret put JAMF_SCOPE "Read Computer Inventory Collection Read Computers"
+```
+
+**必要なスコープ一覧：**
+- `Read Computer Inventory Collection` - コンピューター インベントリ情報の読み取り
+- `Read Computers` - コンピューター基本情報の読み取り
+
+Jamf Pro 管理画面でのスコープ設定は：
+1. **Settings** → **System** → **API Roles and Clients** 
+2. **API Clients** タブで該当クライアントを選択
+3. **Privileges** で上記スコープを有効化
+
 ---
 
 ## 🧪 テスト方法
@@ -144,3 +162,4 @@ wrangler dev --test scheduled "0 * * * MON-FRI"
 ## 📝 ライセンス
 
 MIT License  
+© 2025 Your Company Name
