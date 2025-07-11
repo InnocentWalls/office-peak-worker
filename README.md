@@ -70,3 +70,56 @@ wrangler kv:namespace create PEAK_KV
 
 # 6. デプロイ
 wrangler publish
+
+ダッシュボード操作派の方
+Workers & Pages → Create Worker
+
+Quick Edit で worker.js を貼り付け → Save & Deploy
+
+Settings → KV Namespaces で PEAK_KV をバインド
+
+Settings → Variables に上記 Secrets を登録
+
+Settings → Triggers で Cron を 2 本追加
+
+0 * * * MON-FRI（平日毎時 00 分）
+
+30 9 * * MON-FRI（平日 09:30 UTC = 18:30 JST）
+
+環境変数一覧
+変数	必須	例	説明
+JAMF_URL	✅	https://xxx.jamfcloud.com	Jamf Pro URL（末尾 / 不要）
+OFFICE_NETS	✅	10.0.5.0/24,203.0.113.0/25	オフィスのプライベート / グローバル IP（カンマ区切り複数可）
+SLACK_WEBHOOK_URL	✅	https://hooks.slack.com/...	投稿先 Webhook
+JAMF_CLIENT_ID	任意	–	OAuth2 (Client Credentials) ID
+JAMF_CLIENT_SECRET	任意	–	同上 Secret
+JAMF_USER	任意	–	Basic 認証ユーザー
+JAMF_PASS	任意	–	同上パスワード
+JAMF_SCOPE	任意	READ_COMPUTERS	OAuth2 scope 明示が必要な場合のみ設定
+
+OAuth2 (CLIENT_ID/SECRET) と Basic (USER/PASS) は どちらか片方だけ 設定してください。
+
+ローカルテスト
+bash
+コピーする
+編集する
+wrangler dev # http://localhost:8787/
+# 別ターミナルで擬似 scheduled イベントを発火
+wrangler dev --test scheduled "0 * * * MON-FRI"
+よくある質問
+質問	回答
+在席数が多すぎる	OFFICE_NETS が正しいか / Mac の IP が想定サブネットか確認。BYOD 重複はユーザー名で排除しています。
+昨日の端末が残る	クライアントで jamf recon が十分頻度高く動いているか、スリープ復帰時トリガーを検討。
+Jamf OAuth が 400	Client ID と Scope が一致しているか。Scope 必須なら JAMF_SCOPE を設定。
+休日も投稿したい	Cron の MON-FRI を削除すれば土日も実行されます。
+
+ライセンス
+MIT License
+
+
+
+> **補足**  
+> * `docs/architecture.svg` は任意。図があれば置いてください。  
+> * コマンド例は **wrangler v3** 基準です。  
+> * ライセンス表記は自社ポリシーに合わせて変更してください。
+::contentReference[oaicite:0]{index=0}
